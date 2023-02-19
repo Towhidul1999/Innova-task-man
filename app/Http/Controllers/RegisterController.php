@@ -5,18 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    // public function create()
-    // {
-    //     return view('register');
-    // }
 
     public function store(Request $request)
     {
-
-        // dd($request);
 
         $validatedData = Validator::make($request->all(),[
             'name' => 'required|string|max:255',
@@ -27,8 +22,6 @@ class RegisterController extends Controller
             'mobile_number' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
-        // dd($validatedData);
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -47,20 +40,11 @@ class RegisterController extends Controller
 
 
        try {
-        // $users = User::create([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => bcrypt($request->password),
-        //     'address' => $request->address,
-        //     'blood_group' => $request->blood_group,
-        //     'mobile_number' => $request->mobile_number,
-        //     'image' => $filename,
-        // ]);
 
         $newUser = new User();
         $newUser->name = $request->name;
         $newUser->email = $request->email;
-        $newUser->password = $request->password;
+        $newUser->password = Hash::make($request->password);
         $newUser->address = $request->address;
         $newUser->blood_group = $request->blood_group;
         $newUser->mobile_number = $request->mobile_number;
@@ -80,18 +64,6 @@ class RegisterController extends Controller
             'message' => $e->getMessage()
         ],400);
        }
-
-        // $users->save();
-
-        // auth()->login($user);
-
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'User Created Success',
-        //     'data' => $users
-        // ],200);
-
-        // return redirect('/home');
     }
 }
 
